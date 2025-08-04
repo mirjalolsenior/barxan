@@ -11,6 +11,7 @@ const timeInput = document.getElementById('time');
 const noteInput = document.getElementById('note');
 const display = document.getElementById('bookingDisplay');
 
+// ✅ Band qilish funksiyasi
 async function book() {
   const hall = hallInput.value;
   const date = dateInput.value;
@@ -18,60 +19,94 @@ async function book() {
   const note = noteInput.value;
   if (!hall || !date || !time) return alert("Barcha maydonlar to'ldirilsin");
 
-  await supabase.from('bookings').insert([{ hall, date, time, note }]);
+  const { error } = await supabase.from('bookings').insert([{ hall, date, time, note }]);
+  if (error) {
+    alert('❌ Xatolik: ' + error.message);
+    return;
+  }
+
+  await fetchAndRender(); // ✅ Pastdagi ro‘yxatni darhol yangilaydi
   alert('✅ Band qilindi');
 }
 
+// ❌ Bandni bekor qilish
 async function cancelBooking() {
   const hall = hallInput.value;
   const date = dateInput.value;
   const time = timeInput.value;
-  await supabase.from('bookings')
+
+  const { error } = await supabase.from('bookings')
     .delete()
     .eq('hall', hall)
     .eq('date', date)
     .eq('time', time);
+
+  if (error) {
+    alert('❌ Bekor qilishda xatolik: ' + error.message);
+    return;
+  }
+
+  await fetchAndRender();
   alert('❌ Band bekor qilindi');
 }
 
+// 🔍 Tekshirish
 async function checkBooking() {
   const hall = hallInput.value;
   const date = dateInput.value;
-  const { data } = await supabase.from('bookings')
+
+  const { data, error } = await supabase.from('bookings')
     .select('*')
     .eq('hall', hall)
     .eq('date', date);
-  if (!data || data.length === 0) alert('✅ Bo‘sh: Band yo‘q');
-  else alert('❌ Band mavjud:\n' + data.map(d => `🕒 ${d.time} – ${d.note}`).join('\n'));
+
+  if (error) {
+    alert('❌ Tekshirishda xatolik: ' + error.message);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert('✅ Bo‘sh: Band yo‘q');
+  } else {
+    alert('❌ Band mavjud:\n' + data.map(d => `🕒 ${d.time} – ${d.note}`).join('\n'));
+  }
 }
 
+// 📋 Ro‘yxatni chizish
 function render(data) {
   display.innerHTML = "";
   if (!data || data.length === 0) {
     display.innerHTML = "<p>🚫 Hozircha hech qanday band yo‘q.</p>";
     return;
   }
-  for (const b of data) {
+
+  // Eng so‘nggi bandlar yuqorida chiqishi uchun tartiblash
+  const sorted = data.sort((a, b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time));
+
+  for (const b of sorted) {
     const div = document.createElement("div");
     div.innerHTML = `<b>${b.hall}</b> | 📅 ${b.date} | 🕒 ${b.time}<br />📝 ${b.note}`;
     display.appendChild(div);
   }
 }
 
+// 🔁 Real-time kanal
 supabase.channel('booking-updates')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, payload => {
     fetchAndRender();
   })
   .subscribe();
 
+// 🧲 Ma'lumotlarni yangilash
 async function fetchAndRender() {
-  const { data } = await supabase.from('bookings').select('*');
-  render(data);
+  const { data, error } = await supabase.from('bookings').select('*');
+  if (!error) render(data);
 }
 
+// ▶️ Dastlabki yuklash
 fetchAndRender();
 
-// 👉 Tugmalarni JavaScript orqali ulaymiz
+// 👉 Tugmalarni ulash
 document.getElementById('bookBtn').addEventListener('click', book);
 document.getElementById('cancelBtn').addEventListener('click', cancelBooking);
 document.getElementById('checkBtn').addEventListener('click', checkBooking);
