@@ -1,0 +1,50 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+  padding: 24px;
+  margin: 0;
+  color: #333;
+}
+.container {
+  max-width: 960px;
+  margin: auto;
+}
+.form, .bookings-list {
+  background: #fff;
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+  margin-bottom: 32px;
+}
+h2, h3 {
+  margin-top: 0;
+  color: #5e60ce;
+}
+label {
+  display: block;
+  margin-top: 18px;
+  font-weight: 600;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+button {
+  padding: 14px;
+  background-color: #5e60ce;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 16px;
+}
+.bookings-list div {
+  background: #f9f9f9;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
