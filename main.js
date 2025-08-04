@@ -70,3 +70,8 @@ async function fetchAndRender() {
 }
 
 fetchAndRender();
+
+// 👉 Tugmalarni JavaScript orqali ulaymiz
+document.getElementById('bookBtn').addEventListener('click', book);
+document.getElementById('cancelBtn').addEventListener('click', cancelBooking);
+document.getElementById('checkBtn').addEventListener('click', checkBooking);

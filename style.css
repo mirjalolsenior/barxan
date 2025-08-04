@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
@@ -5,46 +9,113 @@ body {
   margin: 0;
   color: #333;
 }
+
 .container {
-  max-width: 960px;
+  max-width: 720px;
   margin: auto;
 }
+
 .form, .bookings-list {
-  background: #fff;
+  background: #ffffff;
   padding: 28px;
   border-radius: 20px;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
   margin-bottom: 32px;
 }
+
 h2, h3 {
   margin-top: 0;
   color: #5e60ce;
+  font-size: 24px;
 }
+
 label {
   display: block;
   margin-top: 18px;
   font-weight: 600;
+  color: #444;
+  font-size: 15px;
 }
-input, select, textarea {
+
+input,
+select,
+textarea {
   width: 100%;
-  padding: 12px;
-  margin-top: 6px;
+  padding: 14px 16px;
+  margin-top: 8px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 14px;
+  font-size: 16px;
+  background: #f9f9fc;
+  outline-color: #8ec5fc;
+  transition: border 0.3s ease;
 }
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #5e60ce;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
 button {
-  padding: 14px;
+  padding: 16px;
   background-color: #5e60ce;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
-  width: 100%;
-  margin-top: 16px;
+  transition: background 0.3s ease;
 }
+
+button:hover {
+  background-color: #4c4eb0;
+}
+
 .bookings-list div {
-  background: #f9f9f9;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  padding: 10px;
+  background: #f2f2ff;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .form,
+  .bookings-list {
+    padding: 20px;
+  }
+
+  h2, h3 {
+    font-size: 20px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .button-group {
+    gap: 12px;
+  }
 }
