@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description"
+    content="Sherdor va Barxan to'yxonalari uchun zamonaviy band qilish tizimi. Sana, vaqt va izoh bilan to‘liq ko‘rish imkoni.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To‘yxona Band Qilish – Sherdor va Barxan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+      padding: 24px;
+      margin: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+    }
+
+    .form {
+      background: #fdfcfb;
+      padding: 28px;
+      margin-bottom: 32px;
+      border-radius: 20px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    h2, h3 {
+      margin-top: 0;
+      color: #5e60ce;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      padding: 12px 14px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      background: #fcfcfd;
+      display: block;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 14px 20px;
+      background-color: #5e60ce;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #4c4eb0;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .bookings-list {
+      background: #fdfcfb;
+      padding: 28px;
+      border-radius: 20px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .bookings-list div {
+      background: #fff7f7;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 600px) {
+      input,
+      select,
+      textarea,
+      button {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .form {
+        padding: 20px;
+      }
+
+      .button-group button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="form">
+      <h2>To'yxona Band Qilish</h2>
+      <label>To'yxona:</label>
+      <select id="hall">
+        <option value="Sherdor">Sherdor</option>
+        <option value="Barxan">Barxan</option>
+      </select>
+      <label>Sana:</label>
+      <input type="date" id="date" />
+      <label>Vaqt (07:00–19:00):</label>
+      <input type="time" id="time" min="07:00" max="19:00" step="1800" />
+      <label>Izoh:</label>
+      <textarea id="note" rows="2"></textarea>
+      <div class="button-group">
+        <button onclick="book()">Band qilish</button>
+        <button onclick="cancelBooking()" style="background:#ef4444">Bandni bekor qilish</button>
+        <button onclick="checkBooking()" style="background:#3b82f6">Tekshir</button>
+      </div>
+    </div>
+
+    <div class="bookings-list">
+      <h3>📋 Barcha Band Qilingan Kunlar</h3>
+      <div id="bookingDisplay"></div>
+    </div>
+  </div>
+
+  <script>
+    function loadData() {
+      return JSON.parse(localStorage.getItem("bookings") || "{}");
+    }
+
+    function saveData(data) {
+      localStorage.setItem("bookings", JSON.stringify(data));
+    }
+
+    function renderBookingList() {
+      const data = loadData();
+      const container = document.getElementById("bookingDisplay");
+      container.innerHTML = "";
+
+      let empty = true;
+      for (const hall in data) {
+        const hallData = data[hall];
+        for (const date in hallData) {
+          hallData[date].forEach(entry => {
+            const div = document.createElement("div");
+            div.innerHTML = `
+              <strong>${hall}</strong> | 📅 <b>${date}</b> | 🕒 ${entry.vaqt} <br />
+              📝 ${entry.izoh}
+            `;
+            container.appendChild(div);
+            empty = false;
+          });
+        }
+      }
+
+      if (empty) {
+        container.innerHTML = "<p>🚫 Hozircha hech qanday band qilingan sana yo‘q.</p>";
+      }
+    }
+
+    function book() {
+      const hall = document.getElementById("hall").value;
+      const date = document.getElementById("date").value;
+      const vaqt = document.getElementById("time").value;
+      const izoh = document.getElementById("note").value;
+      if (!hall || !date || !vaqt) return alert("Barcha maydonlar to'ldirilsin");
+
+      const data = loadData();
+      data[hall] = data[hall] || {};
+      data[hall][date] = data[hall][date] || [];
+      data[hall][date].push({ vaqt, izoh });
+      saveData(data);
+      renderBookingList();
+      alert("✅ Band qilindi");
+    }
+
+    function cancelBooking() {
+      const hall = document.getElementById("hall").value;
+      const date = document.getElementById("date").value;
+      const vaqt = document.getElementById("time").value;
+      const data = loadData();
+      if (data[hall] && data[hall][date]) {
+        data[hall][date] = data[hall][date].filter(e => e.vaqt !== vaqt);
+        if (data[hall][date].length === 0) delete data[hall][date];
+        saveData(data);
+        renderBookingList();
+        alert("❌ Band bekor qilindi");
+      }
+    }
+
+    function checkBooking() {
+      const hall = document.getElementById("hall").value;
+      const date = document.getElementById("date").value;
+      const data = loadData();
+      if (data[hall] && data[hall][date]) {
+        const info = data[hall][date].map(e => `🕒 ${e.vaqt} — ${e.izoh}`).join("\n");
+        alert(`❌ Band mavjud:\n${info}`);
+      } else {
+        alert("✅ Bo'sh: Band yo'q");
+      }
+    }
+
+    renderBookingList();
+  </script>
+</body>
+
+</html>
