@@ -9,7 +9,19 @@ const hallInput = document.getElementById('hall');
 const dateInput = document.getElementById('date');
 const timeInput = document.getElementById('time');
 const noteInput = document.getElementById('note');
+const adminPassInput = document.getElementById('adminPass');
+const bookBtn = document.getElementById('bookBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const checkBtn = document.getElementById('checkBtn');
 const display = document.getElementById('bookingDisplay');
+
+
+const ADMIN_PASSWORD = "sherzod";
+adminPassInput.addEventListener('input', () => {
+  const isAdmin = adminPassInput.value === ADMIN_PASSWORD;
+  bookBtn.disabled = !isAdmin;
+  cancelBtn.disabled = !isAdmin;
+});
 
 // ✅ Band qilish funksiyasi
 async function book() {
@@ -31,6 +43,8 @@ async function book() {
 
 // ❌ Bandni bekor qilish
 async function cancelBooking() {
+ if (adminPassInput.value !== ADMIN_PASSWORD) return alert("❌ Admin parol noto‘g‘ri");
+
   const hall = hallInput.value;
   const date = dateInput.value;
   const time = timeInput.value;
@@ -48,8 +62,8 @@ async function cancelBooking() {
 
   await fetchAndRender();
   alert('❌ Band bekor qilindi');
-}
 
+}
 // 🔍 Tekshirish
 async function checkBooking() {
   const hall = hallInput.value;
