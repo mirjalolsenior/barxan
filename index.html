@@ -36,9 +36,11 @@
       <input type="time" id="time" min="07:00" max="19:00" step="1800" />
       <label>Izoh:</label>
       <textarea id="note" rows="2"></textarea>
+      <label>Admin parol:</label>
+      <input type="password" id="adminPass" placeholder="Parolni kiriting" />
       <div class="button-group">
-        <button id="bookBtn">Band qilish</button>
-        <button id="cancelBtn" style="background:#ef4444">Bandni bekor qilish</button>
+        <button id="bookBtn" disabled>Band qilish</button>
+        <button id="cancelBtn" disabled style="background:#ef4444">Bandni bekor qilish</button>
         <button id="checkBtn" style="background:#3b82f6">Tekshir</button>
       </div>
     </div>
@@ -50,4 +52,3 @@
   <script type="module" src="main.js"></script>
 </body>
 </html>
-
